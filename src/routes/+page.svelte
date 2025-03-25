@@ -1,14 +1,8 @@
 <script>
-  import { invoke } from "@tauri-apps/api/core";
-
-  async function chiamaRust() {
-    const message = "ale"
-    const greeting = await invoke('greet', { name: message });
-
-    console.log(greeting)
-  }
 </script>
 
-<main class="p-8">
-  <button class="btn btn-primary" on:click={chiamaRust}>Saluta</button>
+<main class="flex flex-col items-center justify-center h-screen space-y-6">
+  <h1 class="text-3xl font-bold">Welcome to Ticklify</h1>
+  <p class="w-3/4 text-center">Create quick and personalized playlists with your favorite Spotify tracks.</p>
+  <button class="btn btn-primary">Sign in with Spotify</button>
 </main>
