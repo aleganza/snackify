@@ -5,6 +5,6 @@
 	let { children } = $props();
 </script>
 
-<WindowControls />
+<!-- <WindowControls /> -->
 
 {@render children()}
