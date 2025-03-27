@@ -18,6 +18,6 @@ export const load: PageServerLoad = async ({ url, cookies, fetch }) => {
       path: "/",
     });
 
-    throw redirect(307, "/app");
+    throw redirect(307, "/app?redirected=true");
   }
 };
