@@ -1,5 +1,5 @@
 {
-	"name": "spotify-tickler",
+	"name": "craftify",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -13,6 +13,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^4.0.0",
+		"@sveltejs/adapter-netlify": "^5.0.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.50",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -26,16 +27,6 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.483.0",
-		"@tauri-apps/plugin-clipboard-manager": "~2",
-		"@tauri-apps/plugin-deep-link": "~2",
-		"@tauri-apps/plugin-dialog": "~2",
-		"@tauri-apps/plugin-fs": "~2",
-		"@tauri-apps/plugin-global-shortcut": "~2",
-		"@tauri-apps/plugin-http": "~2",
-		"@tauri-apps/plugin-notification": "~2",
-		"@tauri-apps/plugin-os": "~2",
-		"@tauri-apps/plugin-process": "~2",
-		"@tauri-apps/plugin-shell": "~2",
 		"@types/node": "^22.13.13"
 	}
 }
