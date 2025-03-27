@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import StatusHeading from "./utils/StatusHeading.svelte";
   import { getUserSavedTracks } from "$lib/api";
+  import Card from "./utils/Card.svelte";
 
   export let onTracksLoaded: (tracks: UserSavedTrack[]) => void;
 
@@ -44,6 +45,7 @@
 
       saveTracksToLocalStorage(tracks);
 
+      lastLoaded = "now";
       status = "loaded";
       onTracksLoaded(tracks);
     } catch (error) {
@@ -52,17 +54,40 @@
     }
   };
 
+  // Function to format the time difference
+  const formatTimeAgo = (date: string) => {
+    if (date === "now") return date;
+
+    const now = new Date();
+    const loadedDate = new Date(date);
+    const diffInSeconds = Math.floor(
+      (now.getTime() - loadedDate.getTime()) / 1000
+    );
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+    } else if (hours > 0) {
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    } else if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    } else {
+      return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
+    }
+  };
+
   onMount(() => {
     loadTracksFromLocalStorage();
   });
 </script>
 
-<div>
-  <StatusHeading
-    text={"Load your saved tracks"}
-    status={tracks.length === 0 ? "incomplete" : "completed"}
-  />
-
+<Card
+  heading={"Load your saved tracks"}
+  status={tracks.length === 0 ? "incomplete" : "completed"}
+>
   <button
     class="btn btn-primary"
     on:click={loadTracks}
@@ -73,13 +98,14 @@
 
   <div class="mt-4">
     {#if status === "loading"}
-      <p>Loading...</p>
+      <span class="loading loading-spinner text-primary"></span>
     {:else if status === "loaded"}
-      <p>Tracks Loaded</p>
-      <p>Last Loaded: {lastLoaded}</p>
-      <p>Number of Tracks: {trackCount}</p>
+      <p class="text-sm text-primary">{trackCount} Tracks loaded</p>
+      <p class="text-sm opacity-50">
+        Last loaded {lastLoaded ? formatTimeAgo(lastLoaded) : "Never"}
+      </p>
     {:else}
-      <p>No tracks loaded</p>
+      <p class="text-sm text-warning">No tracks loaded</p>
     {/if}
   </div>
-</div>
+</Card>

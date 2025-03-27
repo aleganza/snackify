@@ -13,11 +13,10 @@ export const load: PageServerLoad = async ({ url, cookies, fetch }) => {
     cookies.set("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
       maxAge: 60 * 60, // 1 hour (spotify tokens expire after 1 hour)
       path: "/",
     });
 
-    throw redirect(307, "/app?redirected=true");
+    throw redirect(303, "/?redirected=true");
   }
 };

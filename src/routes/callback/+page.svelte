@@ -1,4 +1,4 @@
 <script>
 </script>
 
-<p>Autenticazione in corso...</p>
+<p>authenticating...</p>

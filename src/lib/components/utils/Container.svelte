@@ -1,15 +1,11 @@
-<script lang="ts">
-  export let className = "";
-</script>
+<div class="flex flex-col items-center justify-center min-h-screen bg-base-200">
+  <h1 class="text-3xl font-bold mb-2">Snackify</h1>
 
-<h1 class="absolute top-6 left-6 text-3xl font-bold">Craftify</h1>
+  <p class="text-sm opacity-50 mb-8 max-w-[350px] text-center">
+    Create personalized playlists by selecting tracks from your saved music,
+    filtered by your favorite artists, and organize them into a "Snack"
+    playlist.
+  </p>
 
-<div class="flex items-center justify-center min-h-screen bg-base-200">
-  <div
-    class={`relative w-[1024px] h-[608px] bg-base-100 shadow-lg rounded-lg p-6 ${className}`}
-  >
-    <slot />
-
-    <!-- <Dock /> -->
-  </div>
+  <slot />
 </div>

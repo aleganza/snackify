@@ -1,7 +1,8 @@
 <script lang="ts">
   import { fetchArtists, type Artist } from "$lib/api";
+  import Card from "./utils/Card.svelte";
   import StatusHeading from "./utils/StatusHeading.svelte";
-
+  import { Search } from "@lucide/svelte";
   export let onArtistsSelected: (artists: Artist[]) => void;
 
   let searchQuery = "";
@@ -50,20 +51,34 @@
   };
 </script>
 
-<div class="w-full max-w-xl mt-6">
-  <StatusHeading
-    text={"Choose your artists"}
-    status={selectedArtists.length === 0 ? "incomplete" : "completed"}
-  />
-
+<Card
+  heading={"Choose your artists"}
+  status={selectedArtists.length === 0 ? "incomplete" : "completed"}
+>
   <div class="relative">
-    <input
-      type="text"
-      class="input input-bordered w-full pr-16"
-      placeholder="Search artist..."
-      bind:value={searchQuery}
-      on:input={handleSearchChange}
-    />
+    <label class="input w-full">
+      <svg
+        class="h-[1em] opacity-50"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        ><g
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          stroke-width="2.5"
+          fill="none"
+          stroke="currentColor"
+          ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
+          ></path></g
+        ></svg
+      >
+      <input
+        type="search"
+        class="grow"
+        placeholder="Search artist..."
+        bind:value={searchQuery}
+        on:input={handleSearchChange}
+      />
+    </label>
     {#if isSearching}
       <div
         class="absolute top-0 right-0 mt-3 mr-3 spinner-border text-gray-500"
@@ -95,7 +110,7 @@
     {/if}
   </div>
 
-  {#if selectedArtists.length > 0 || true}
+  {#if selectedArtists.length > 0}
     <div class="mt-4 flex flex-wrap space-x-2">
       {#each selectedArtists as artist}
         <div class="badge badge-soft h-8 bg-red-50 flex justify-center">
@@ -108,4 +123,4 @@
       {/each}
     </div>
   {/if}
-</div>
+</Card>

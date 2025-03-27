@@ -10,6 +10,7 @@
   import SearchArtists from "./SearchArtists.svelte";
   import TracksMatcher from "./TracksMatcher.svelte";
   import { userId } from "$lib/stores/userId";
+  import Authenticator from "./Authenticator.svelte";
 
   const id = get(userId);
 
@@ -50,16 +51,21 @@
       id,
       matchedTracks
     );
-    if (created) alert("Playlist created!");
+
+    created
+      ? alert("Playlist created!")
+      : alert("A problem occured creating Snack");
   };
 </script>
 
 <div>
-  <h1 class="font-bold text-2xl">Craft your playlist</h1>
+  <Authenticator />
 
   <SearchArtists onArtistsSelected={handleArtistsSelected} />
 
   <SavedTracksLoader onTracksLoaded={handleTracksLoaded} />
+
+  <EnterPlaylistInfo onPlaylistNameChanged={handlePlaylistNameChanged} />
 
   <TracksMatcher
     artists={selectedArtists}
@@ -67,9 +73,13 @@
     onMatchedTracksUpdated={handleMatchedTracksUpdated}
   />
 
-  <EnterPlaylistInfo onPlaylistNameChanged={handlePlaylistNameChanged} />
-
-  <button class="btn btn-primary" onclick={craftPlaylist} disabled={!canCraft}>
-    Craft!
-  </button>
+  <div class="w-full flex justify-center">
+    <button
+      class="btn btn-primary"
+      onclick={craftPlaylist}
+      disabled={!canCraft}
+    >
+      Forge your Snack!
+    </button>
+  </div>
 </div>

@@ -18,7 +18,7 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   const token = get(authToken);
 
   if (!token) {
-    throw new Error("Access token non disponibile");
+    throw new Error("Access token not available");
   }
 
   const headers = {
@@ -104,7 +104,7 @@ export const createPlaylistWithTracks = async (
     const urlCreatePlaylist = `https://api.spotify.com/v1/users/${userId}/playlists`;
     const playlistData = {
       name: playlistName,
-      description: "A new playlist created via Craftify",
+      description: "A new snack created via Snackify",
       public: true,
     };
 

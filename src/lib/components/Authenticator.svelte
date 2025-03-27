@@ -1,4 +1,10 @@
 <script>
+  import { authToken } from "$lib/stores/auth";
+  import { get } from "svelte/store";
+  import Card from "./utils/Card.svelte";
+
+  const token = get(authToken);
+
   const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
   const scopes = [
@@ -23,15 +29,19 @@
     }
   )}`;
 
-  function login() {
+  const login = () => {
     window.location.href = authUrl;
-  }
+  };
+
+  const logout = () => {
+    window.location.href = "/logout";
+  };
 </script>
 
-<main class="flex flex-col items-center justify-center h-full space-y-6">
-  <h1 class="text-3xl font-bold">Welcome to Craftify</h1>
-  <p class="w-3/4 text-center">
-    Create quick and personalized playlists with your favorite Spotify tracks.
-  </p>
-  <button on:click={login} class="btn btn-primary">Connect with Spotify</button>
-</main>
+<Card heading="Connect Spotify" status={token ? "completed" : "incomplete"}>
+  {#if token}
+    <button on:click={logout} class="btn btn-warning">Logout</button>
+  {:else}
+    <button on:click={login} class="btn btn-primary">Login</button>
+  {/if}
+</Card>
