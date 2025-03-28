@@ -5,7 +5,6 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
-  tabindex="0"
   class="collapse collapse-arrow bg-base-100 border-base-300 border mb-3"
 >
   <div class="flex flex-row items-center gap-2 collapse-title font-semibold">
@@ -16,7 +15,7 @@
     {heading}
   </div>
 
-  <input type="checkbox" />
+  <input type="radio" name="accordion" />
 
   <div class="collapse-content text-sm">
     <slot />
