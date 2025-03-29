@@ -6,7 +6,6 @@
     type Artist,
     type UserSavedTrack,
   } from "$lib/api";
-  import { get } from "svelte/store";
   import EnterPlaylistInfo from "./EnterPlaylistInfo.svelte";
   import SavedTracksLoader from "./SavedTracksLoader.svelte";
   import SearchArtists from "./SearchArtists.svelte";

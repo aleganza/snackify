@@ -35,7 +35,7 @@
       selectedArtists = [...selectedArtists, artist];
       onArtistsSelected(selectedArtists);
 
-      showToast(`${artist.name} added!`, "success")
+      showToast(`${artist.name} added!`, "success");
     }
   };
 
@@ -43,13 +43,7 @@
     selectedArtists = selectedArtists.filter((a) => a.id !== artist.id);
     onArtistsSelected(selectedArtists);
 
-    showToast(`${artist.name} removed!`, "success")
-  };
-
-  const handleKeydown = (event: KeyboardEvent, artist: any) => {
-    if (event.key === "Enter" || event.key === " ") {
-      addArtist(artist);
-    }
+    showToast(`${artist.name} removed!`, "success");
   };
 </script>
 
@@ -91,22 +85,60 @@
 
     {#if searchResults.length > 0}
       <ul
-        class="absolute w-full rounded-[20px_20px_20px_20px] shadow-lg mt-2 max-h-60 overflow-y-auto z-10"
+        class="list bg-base-100 max-h-60 mt-3 overflow-y-auto rounded-box shadow-md"
       >
         {#each searchResults as artist}
-          <li class="cursor-pointer bg-base-300 hover:brightness-[1.10]">
-            <button
-              class="flex flex-row items-center gap-3 p-2 w-full text-left focus:outline-none bg-red cursor-pointer"
-              on:click={() => addArtist(artist)}
-              on:keydown={(event) => handleKeydown(event, artist)}
-              aria-label={`Select ${artist.name}`}
-            >
-              {#if artist.imageUrl}<img
+          <li class="list-row px-0 py-2">
+            <div class="flex justify-center items-center size-10">
+              {#if artist.imageUrl}
+                <img
+                  class="size-10 rounded-box"
                   src={artist.imageUrl}
-                  alt="avatar"
-                  class="w-[30px] rounder-full"
-                />{/if}
-              {artist.name}
+                  alt="artist avatar"
+                />
+              {:else}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-8 opacity-50"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+              {/if}
+            </div>
+            <div class="flex items-center">
+              <div>{artist.name}</div>
+              <!-- <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div> -->
+            </div>
+            <!-- svelte-ignore a11y_consider_explicit_label -->
+            <button
+              class="btn btn-square btn-ghost"
+              disabled={selectedArtists.some((a) => a.id === artist.id)}
+              on:click={() => addArtist(artist)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class={`size-[1.2em]${selectedArtists.some((a) => a.id === artist.id) ? " text-primary" : ""}`}
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d={selectedArtists.some((a) => a.id === artist.id)
+                    ? "m4.5 12.75 6 6 9-13.5"
+                    : "M12 4.5v15m7.5-7.5h-15"}
+                />
+              </svg>
             </button>
           </li>
         {/each}
@@ -115,9 +147,9 @@
   </div>
 
   {#if selectedArtists.length > 0}
-    <div class="mt-4 flex flex-wrap space-x-2">
+    <div class="mt-3 flex flex-wrap gap-2">
       {#each selectedArtists as artist}
-        <div class="badge badge-soft h-8 bg-red-50 flex justify-center">
+        <div class="badge badge-soft h-8 flex justify-center">
           <span>{artist.name}</span>
           <button
             class="flex justify-center items-center w-4 h-4 rounded-full cursor-pointer text-gray-300 hover:text-gray-500 font-semibold"

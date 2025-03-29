@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @plugin "daisyui";
+
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
@@ -33,4 +34,11 @@
   --border: 2px;
   --depth: 0;
   --noise: 1;
+}
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
