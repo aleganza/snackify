@@ -49,7 +49,7 @@
   checked
 >
   {#if token}
-    <button onclick={logout} class="btn btn-warning">Logout</button>
+    <button onclick={logout} class="btn btn-error">Logout</button>
   {:else}
     <button onclick={login} class="btn btn-primary">Login</button>
   {/if}

@@ -1,6 +1,5 @@
 <script lang="ts">
   import Card from "./utils/Card.svelte";
-  import StatusHeading from "./utils/StatusHeading.svelte";
 
   export let onPlaylistNameChanged: (name: string) => void;
 
@@ -40,9 +39,4 @@
       on:input={handleInputChange}
     />
   </label>
-
-  <!-- <label class="fieldset-label">
-    <input type="checkbox" checked={true} class="checkbox checkbox-primary" />
-    
-  </label> -->
 </Card>

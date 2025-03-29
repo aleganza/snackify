@@ -33,7 +33,7 @@
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    class={`h-[1em] ${matchedTracks.length > 0 ? "text-primary" : "text-warning"}`}
+    class={`h-[1em] ${matchedTracks.length > 0 ? "text-primary" : "text-error"}`}
   >
     <path
       stroke-linecap="round"
@@ -45,7 +45,7 @@
   </svg>
 
   <p
-    class={`text-sm ${matchedTracks.length > 0 ? "text-primary" : "text-warning"}`}
+    class={`text-sm ${matchedTracks.length > 0 ? "text-primary" : "text-error"}`}
   >
   {matchedTracks.length} matches found
   </p>

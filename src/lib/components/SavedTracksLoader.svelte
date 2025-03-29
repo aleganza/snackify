@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import StatusHeading from "./utils/StatusHeading.svelte";
   import { getUserSavedTracks } from "$lib/api";
   import Card from "./utils/Card.svelte";
   import Toast from "./utils/Toast.svelte";
@@ -113,7 +112,7 @@
         Last loaded {lastLoaded ? formatTimeAgo(lastLoaded) : "Never"}
       </p>
     {:else}
-      <p class="text-sm text-warning">No tracks loaded</p>
+      <p class="text-sm text-error">No tracks loaded</p>
     {/if}
   </div>
 </Card>
