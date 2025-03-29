@@ -1,13 +1,29 @@
 <script lang="ts">
   import Card from "./utils/Card.svelte";
 
-  export let onPlaylistNameChanged: (name: string) => void;
+  export let onPlaylistInfoChanged: (
+    name: string,
+    isPrivate: boolean,
+    includeAllArtists: boolean
+  ) => void;
 
   let playlistName: string = "";
+  let isPrivate: boolean = true;
+  let includeAllArtists: boolean = false;
 
   const handleInputChange = (event: Event) => {
     playlistName = (event.target as HTMLInputElement).value;
-    onPlaylistNameChanged(playlistName);
+    onPlaylistInfoChanged(playlistName, isPrivate, includeAllArtists);
+  };
+
+  const handlePrivateChange = () => {
+    onPlaylistInfoChanged(playlistName, !isPrivate, includeAllArtists);
+    isPrivate = !isPrivate;
+  };
+
+  const handleIncludeAllArtistsChange = () => {
+    onPlaylistInfoChanged(playlistName, isPrivate, !includeAllArtists);
+    includeAllArtists = !includeAllArtists;
   };
 </script>
 
@@ -39,4 +55,32 @@
       on:input={handleInputChange}
     />
   </label>
+
+  <div class="mt-3 flex flex-col gap-2">
+    <div class="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        checked={isPrivate}
+        class="checkbox checkbox-sm checked:bg-success checked:text-white checked:border-success"
+        id="make-private-checkbox"
+        on:change={handlePrivateChange}
+      />
+      <label for="make-private-checkbox" class="text-sm opacity-50"
+        >Make private</label
+      >
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        checked={includeAllArtists}
+        class="checkbox checkbox-sm checked:bg-success checked:text-white checked:border-success"
+        id="include-all-artists-checkbox"
+        on:change={handleIncludeAllArtistsChange}
+      />
+      <label for="include-all-artists-checkbox" class="text-sm opacity-50">
+        Include only songs featuring all the selected artists
+      </label>
+    </div>
+  </div>
 </Card>

@@ -17,8 +17,6 @@
     "playlist-modify-public",
     "playlist-read-collaborative",
     "user-library-read",
-    "playlist-modify-private",
-    "playlist-modify-public",
   ];
 
   const authUrl = `https://accounts.spotify.com/authorize?${new URLSearchParams(

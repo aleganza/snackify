@@ -121,14 +121,16 @@ export const getUserId = async (): Promise<string | null> => {
 
 export const createPlaylist = async (
   playlistName: string,
-  userId: string
+  userId: string,
+  isPrivate: boolean
 ): Promise<string | null> => {
+  console.log(isPrivate)
   try {
     const urlCreatePlaylist = `https://api.spotify.com/v1/users/${userId}/playlists`;
     const playlistData = {
       name: playlistName,
       description: "A new snack created via Snackify",
-      public: true,
+      public: !isPrivate,
     };
 
     const createdPlaylist = await fetchWithAuth(urlCreatePlaylist, {

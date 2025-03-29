@@ -4,22 +4,29 @@
 
   export let artists: Artist[];
   export let tracks: UserSavedTrack[];
-  export let onMatchedTracksUpdated: (matchedTracks: UserSavedTrack[]) => void; // Callback prop
+  export let includeAllArtists: boolean;
+  export let onMatchedTracksUpdated: (matchedTracks: UserSavedTrack[]) => void;
 
   let matchedTracks: UserSavedTrack[] = [];
 
   const matchTracksWithArtists = (
     tracks: UserSavedTrack[],
-    artists: Artist[]
+    artists: Artist[],
+    includeAll: boolean
   ): UserSavedTrack[] => {
-    return tracks.filter((track) =>
-      track.artists.some((artistId) =>
-        artists.some((artist) => artist.id === artistId)
-      )
-    );
+    return tracks.filter((track) => {
+      const trackArtists = track.artists;
+      if (includeAll) {
+        return artists.every((artist) => trackArtists.includes(artist.id));
+      } else {
+        return trackArtists.some((artistId) =>
+          artists.some((artist) => artist.id === artistId)
+        );
+      }
+    });
   };
 
-  $: matchedTracks = matchTracksWithArtists(tracks, artists);
+  $: matchedTracks = matchTracksWithArtists(tracks, artists, includeAllArtists);
 
   $: {
     onMatchedTracksUpdated(matchedTracks);
@@ -47,6 +54,6 @@
   <p
     class={`text-sm ${matchedTracks.length > 0 ? "text-primary" : "text-error"}`}
   >
-  {matchedTracks.length} matches found
+    {matchedTracks.length} matches found
   </p>
 </div>

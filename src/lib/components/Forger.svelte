@@ -18,6 +18,8 @@
   let savedTracks: UserSavedTrack[] = [];
   let matchedTracks: UserSavedTrack[] = [];
   let playlistName: string = "";
+  let playlistIsPrivate: boolean = true;
+  let tracksIncludeAllArtists: boolean = false;
 
   let isLoading: boolean = false;
   let buttonText: string = "Forge your Snack!";
@@ -42,8 +44,14 @@
     matchedTracks = updatedMatchedTracks;
   };
 
-  const handlePlaylistNameChanged = (name: string) => {
+  const handlePlaylistInfoChanged = (
+    name: string,
+    isPrivate: boolean,
+    includeAllArtists: boolean
+  ) => {
     playlistName = name;
+    playlistIsPrivate = isPrivate;
+    tracksIncludeAllArtists = includeAllArtists;
   };
 
   const forgeSnack = async () => {
@@ -59,7 +67,11 @@
       return;
     }
 
-    const playlistId = await createPlaylist(playlistName, userId);
+    const playlistId = await createPlaylist(
+      playlistName,
+      userId,
+      playlistIsPrivate
+    );
 
     if (!playlistId) {
       showToast("Error creating the playlist.", "error");
@@ -93,11 +105,12 @@
 
   <SavedTracksLoader onTracksLoaded={handleTracksLoaded} />
 
-  <EnterPlaylistInfo onPlaylistNameChanged={handlePlaylistNameChanged} />
+  <EnterPlaylistInfo onPlaylistInfoChanged={handlePlaylistInfoChanged} />
 
   <TracksMatcher
     artists={selectedArtists}
     tracks={savedTracks}
+    includeAllArtists={tracksIncludeAllArtists}
     onMatchedTracksUpdated={handleMatchedTracksUpdated}
   />
 
