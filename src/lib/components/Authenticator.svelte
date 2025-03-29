@@ -2,6 +2,8 @@
   import { authToken } from "$lib/stores/auth";
   import { get } from "svelte/store";
   import Card from "./utils/Card.svelte";
+  import Toast from "$lib/components/utils/Toast.svelte";
+  import { showToast } from "$lib/hooks/useToast";
 
   const token = get(authToken);
 
@@ -35,13 +37,20 @@
 
   const logout = () => {
     window.location.href = "/logout";
+    showToast("Logged out!", "success")
   };
 </script>
 
-<Card heading="Connect Spotify" status={token ? "completed" : "incomplete"}>
+<Toast />
+
+<Card
+  heading="Connect Spotify"
+  status={token ? "completed" : "incomplete"}
+  checked
+>
   {#if token}
-    <button on:click={logout} class="btn btn-warning">Logout</button>
+    <button onclick={logout} class="btn btn-warning">Logout</button>
   {:else}
-    <button on:click={login} class="btn btn-primary">Login</button>
+    <button onclick={login} class="btn btn-primary">Login</button>
   {/if}
 </Card>

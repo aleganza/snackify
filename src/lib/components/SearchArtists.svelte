@@ -1,8 +1,8 @@
 <script lang="ts">
   import { fetchArtists, type Artist } from "$lib/api";
   import Card from "./utils/Card.svelte";
-  import StatusHeading from "./utils/StatusHeading.svelte";
-  import { Search } from "@lucide/svelte";
+  import Toast from "$lib/components/utils/Toast.svelte";
+  import { showToast } from "$lib/hooks/useToast";
   export let onArtistsSelected: (artists: Artist[]) => void;
 
   let searchQuery = "";
@@ -34,14 +34,16 @@
     if (!selectedArtists.some((a) => a.id === artist.id)) {
       selectedArtists = [...selectedArtists, artist];
       onArtistsSelected(selectedArtists);
+
+      showToast(`${artist.name} added!`, "success")
     }
   };
 
-  const removeArtist = (artistId: string) => {
-    selectedArtists = selectedArtists.filter(
-      (artist) => artist.id !== artistId
-    );
+  const removeArtist = (artist: Artist) => {
+    selectedArtists = selectedArtists.filter((a) => a.id !== artist.id);
     onArtistsSelected(selectedArtists);
+
+    showToast(`${artist.name} removed!`, "success")
   };
 
   const handleKeydown = (event: KeyboardEvent, artist: any) => {
@@ -50,6 +52,8 @@
     }
   };
 </script>
+
+<Toast />
 
 <Card
   heading={"Choose your artists"}
@@ -117,7 +121,7 @@
           <span>{artist.name}</span>
           <button
             class="flex justify-center items-center w-4 h-4 rounded-full cursor-pointer text-gray-300 hover:text-gray-500 font-semibold"
-            on:click={() => removeArtist(artist.id)}>X</button
+            on:click={() => removeArtist(artist)}>X</button
           >
         </div>
       {/each}

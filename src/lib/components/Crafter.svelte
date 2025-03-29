@@ -1,6 +1,8 @@
 <script lang="ts">
   import {
-    createPlaylistWithTracks,
+    addTracksToPlaylist,
+    createPlaylist,
+    getUserId,
     type Artist,
     type UserSavedTrack,
   } from "$lib/api";
@@ -9,17 +11,19 @@
   import SavedTracksLoader from "./SavedTracksLoader.svelte";
   import SearchArtists from "./SearchArtists.svelte";
   import TracksMatcher from "./TracksMatcher.svelte";
-  import { userId } from "$lib/stores/userId";
   import Authenticator from "./Authenticator.svelte";
-
-  const id = get(userId);
+  import Toast from "./utils/Toast.svelte";
+  import { showToast } from "$lib/hooks/useToast";
 
   let selectedArtists: Artist[] = [];
   let savedTracks: UserSavedTrack[] = [];
   let matchedTracks: UserSavedTrack[] = [];
   let playlistName: string = "";
 
-  $: canCraft =
+  let isLoading: boolean = false;
+  let buttonText: string = "Forge your Snack!";
+
+  $: canForge =
     selectedArtists.length !== 0 &&
     savedTracks.length !== 0 &&
     matchedTracks.length !== 0 &&
@@ -43,20 +47,45 @@
     playlistName = name;
   };
 
-  const craftPlaylist = async () => {
-    if (!id) return;
+  const forgeSnack = async () => {
+    isLoading = true;
+    buttonText = "Forging snack...";
 
-    const created = await createPlaylistWithTracks(
-      playlistName,
-      id,
-      matchedTracks
-    );
+    const userId = await getUserId();
 
-    created
-      ? alert("Playlist created!")
-      : alert("A problem occured creating Snack");
+    if (!userId) {
+      showToast("Error fetching user data.", "error");
+      isLoading = false;
+      buttonText = "Forge your Snack!";
+      return;
+    }
+
+    const playlistId = await createPlaylist(playlistName, userId);
+
+    if (!playlistId) {
+      showToast("Error creating the playlist.", "error");
+      isLoading = false;
+      buttonText = "Forge your Snack!";
+      return;
+    }
+
+    showToast("Playlist successfully created!", "success");
+    buttonText = "Adding tracks...";
+
+    const tracksAdded = await addTracksToPlaylist(playlistId, matchedTracks);
+
+    if (tracksAdded) {
+      showToast("Tracks successfully added to the playlist!", "success");
+    } else {
+      showToast("Error adding tracks to the playlist.", "error");
+    }
+
+    isLoading = false;
+    buttonText = "Forge your Snack!";
   };
 </script>
+
+<Toast />
 
 <div>
   <Authenticator />
@@ -76,10 +105,10 @@
   <div class="w-full flex justify-center">
     <button
       class="btn btn-primary"
-      onclick={craftPlaylist}
-      disabled={!canCraft}
+      onclick={forgeSnack}
+      disabled={!canForge || isLoading}
     >
-      Forge your Snack!
+      {buttonText}
     </button>
   </div>
 </div>

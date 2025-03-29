@@ -95,11 +95,34 @@ export const fetchArtists = async (query: string): Promise<Artist[]> => {
   }));
 };
 
-export const createPlaylistWithTracks = async (
+export const getUserId = async (): Promise<string | null> => {
+  const token = get(authToken);
+
+  try {
+    const response = await fetch("https://api.spotify.com/v1/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Error fetching user data");
+      return null;
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error("Error getting user ID:", error);
+    return null;
+  }
+};
+
+export const createPlaylist = async (
   playlistName: string,
-  userId: string,
-  matchedTracks: UserSavedTrack[]
-): Promise<boolean> => {
+  userId: string
+): Promise<string | null> => {
   try {
     const urlCreatePlaylist = `https://api.spotify.com/v1/users/${userId}/playlists`;
     const playlistData = {
@@ -118,36 +141,63 @@ export const createPlaylistWithTracks = async (
 
     if (!createdPlaylist || !createdPlaylist.id) {
       console.error("Error creating playlist");
-      return false;
+      return null;
     }
 
-    const playlistId = createdPlaylist.id;
-    console.log(`Playlist successfully created with id: ${playlistId}`);
+    console.log(`Playlist successfully created with id: ${createdPlaylist.id}`);
+    return createdPlaylist.id;
+  } catch (error) {
+    console.error("Unusual error while creating playlist: ", error);
+    return null;
+  }
+};
 
-    const trackUris = matchedTracks.map((track) => `spotify:track:${track.id}`);
-
-    const urlAddTracks = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-    const addTracksData = {
-      uris: trackUris,
+export const addTracksToPlaylist = async (
+  playlistId: string,
+  matchedTracks: UserSavedTrack[]
+): Promise<boolean> => {
+  try {
+    const chunkArray = (array: UserSavedTrack[], size: number) => {
+      const chunks = [];
+      for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+      }
+      return chunks;
     };
 
-    const resAddTracks = await fetchWithAuth(urlAddTracks, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(addTracksData),
-    });
+    const trackChunks = chunkArray(matchedTracks, 100);
 
-    if (resAddTracks) {
-      console.log(`Tracks added to playlist ${playlistId} successfully.`);
-      return true;
-    } else {
-      console.error("Error adding tracks to playlist.");
-      return false;
+    for (let i = 0; i < trackChunks.length; i++) {
+      const trackUris = trackChunks[i].map(
+        (track) => `spotify:track:${track.id}`
+      );
+
+      const urlAddTracks = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+      const addTracksData = {
+        uris: trackUris,
+      };
+
+      const resAddTracks = await fetchWithAuth(urlAddTracks, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(addTracksData),
+      });
+
+      if (!resAddTracks) {
+        console.error(`Error adding tracks to playlist on batch ${i + 1}`);
+        return false;
+      }
+
+      console.log(
+        `Batch ${i + 1} of tracks added to playlist ${playlistId} successfully.`
+      );
     }
+
+    return true;
   } catch (error) {
-    console.error("Unusual error: ", error);
+    console.error("Unusual error while adding tracks: ", error);
     return false;
   }
 };

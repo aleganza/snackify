@@ -3,6 +3,8 @@
   import StatusHeading from "./utils/StatusHeading.svelte";
   import { getUserSavedTracks } from "$lib/api";
   import Card from "./utils/Card.svelte";
+  import Toast from "./utils/Toast.svelte";
+  import { showToast } from "$lib/hooks/useToast";
 
   export let onTracksLoaded: (tracks: UserSavedTrack[]) => void;
 
@@ -28,6 +30,8 @@
       trackCount = tracks.length;
       status = "loaded";
       onTracksLoaded(tracks);
+
+      showToast("Loaded saved tracks from browser storage.", "success");
     }
   };
 
@@ -48,13 +52,15 @@
       lastLoaded = "now";
       status = "loaded";
       onTracksLoaded(tracks);
+
+      showToast(`${tracks.length} tracks successfully loaded from Spotify.`, "success");
     } catch (error) {
       status = "not_loaded";
-      console.error("Error loading tracks from storage:", error);
+      console.error("Error loading tracks from Spotify:", error);
+      showToast("An error occurred while loading the tracks.", "error");
     }
   };
 
-  // Function to format the time difference
   const formatTimeAgo = (date: string) => {
     if (date === "now") return date;
 
@@ -83,6 +89,8 @@
     loadTracksFromLocalStorage();
   });
 </script>
+
+<Toast />
 
 <Card
   heading={"Load your saved tracks"}
